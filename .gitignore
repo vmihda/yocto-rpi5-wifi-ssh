@@ -6,6 +6,3 @@
 
 # Build-time secrets; keep them outside the repo (see secrets.env.example)
 *.env
-
-# macOS metadata
-.DS_Store
