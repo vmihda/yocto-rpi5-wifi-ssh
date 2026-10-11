@@ -1,0 +1,2 @@
+FIXME: Please place here the short summary of what this build configuration is for.
+It will be shown to the users when they set up their builds via TEMPLATECONF.

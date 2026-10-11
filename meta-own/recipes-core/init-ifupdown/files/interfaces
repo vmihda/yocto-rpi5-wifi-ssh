@@ -1,0 +1,11 @@
+auto lo
+iface lo inet loopback
+
+auto wlan0
+iface wlan0 inet dhcp
+    pre-up n=0; while [ ! -e /sys/class/net/wlan0 ] && [ $n -lt 20 ]; do sleep 1; n=$((n+1)); done
+    wpa-driver nl80211
+    wpa-conf /etc/wpa_supplicant.conf
+    hostname rpi5-hw
+    post-up iw dev wlan0 set power_save off
+

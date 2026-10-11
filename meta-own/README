@@ -1,0 +1,38 @@
+meta-own
+========
+
+Layer for a minimal Raspberry Pi 5 image with Dropbear SSH reachable over
+the onboard Wi-Fi. See ../README.md for build instructions.
+
+Dependencies
+------------
+
+  URI: https://git.yoctoproject.org/poky
+  layers: meta (core)
+  branch: scarthgap
+
+  URI: https://github.com/agherzan/meta-raspberrypi
+  branch: scarthgap
+  (provides MACHINE = "raspberrypi5")
+
+Contents
+--------
+
+  recipes-core/images/own-image.bb
+      The image: Dropbear, wpa_supplicant, iw, wireless-regdb. Injects the
+      root password hash and Wi-Fi credentials from the file in RPI5_SECRETS
+      at do_rootfs time.
+
+  recipes-core/init-ifupdown/
+      /etc/network/interfaces that brings up wlan0 at boot with DHCP and
+      Wi-Fi power save off.
+
+  recipes-core/base-files/
+      Hostname rpi5-hw.
+
+  recipes-core/ssh-authorized-keys/
+      Public key allowed to log in as root (/home/root/.ssh/authorized_keys).
+
+  conf/templates/default/
+      local.conf and bblayers.conf used for this build, created with
+      "bitbake-layers save-build-conf".

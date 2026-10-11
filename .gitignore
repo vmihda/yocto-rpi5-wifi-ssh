@@ -1,0 +1,11 @@
+# Built images: large binaries that contain the Wi-Fi PSK and root password hash
+*.wic
+*.wic.bz2
+*.wic.bmap
+*.bz2
+
+# Build-time secrets; keep them outside the repo (see secrets.env.example)
+*.env
+
+# macOS metadata
+.DS_Store
