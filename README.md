@@ -74,7 +74,7 @@ The repository has no passwords and no hashes. `own-image.bb` reads them from th
 | `WIFI_PSK` | a precomputed 64-hex-digit PSK, instead of `WIFI_PASSWORD` |
 | `WIFI_COUNTRY` | optional regulatory domain, `UA` by default |
 
-The file is read while `do_rootfs` runs, so the values never enter the BitBake datastore, task signatures or sstate. BitBake only tracks the file's checksum (`do_rootfs[file-checksums]`), and editing the file triggers a new `do_rootfs`. A missing file or variable stops the build with an error, rather than producing an image with a passwordless root.
+The file is read while `do_rootfs` runs, so the values never enter the BitBake datastore, task signatures or sstate. BitBake only tracks the file's checksum (`do_rootfs[file-checksums]`), and editing the file triggers a new `do_rootfs`. If the file or a variable is missing, the build stops with an error, so it can't produce an image where root has no password.
 
 The secrets do end up inside the image, since the board needs them. That is why images are in `.gitignore`.
 
@@ -89,7 +89,7 @@ bzcat own-image-raspberrypi5.rootfs.wic.bz2 | sudo dd of=/dev/rdiskN bs=4m statu
 diskutil eject /dev/diskN
 ```
 
-On Linux, `bmaptool copy` with the `.wic.bmap` file next to the image is faster, or use `dd` with `of=/dev/sdX`. Double-check the device name either way.
+On Linux you can use `bmaptool copy`: it reads the `.wic.bmap` file next to the image and writes only the blocks that hold data. Plain `dd` with `of=/dev/sdX` works too. Double-check the device name either way.
 
 The board sends the hostname `rpi5-hw` in its DHCP request, so most routers list it under that name. Then:
 
@@ -115,7 +115,7 @@ Poky's wpa_supplicant package installs an ifupdown hook that starts the daemon i
 
 ### Differences from the Buildroot version
 
-`meta-raspberrypi` installs the `bcm2712d0.dtbo` overlay, so D0-stepping boards boot without the kernel panic that the Buildroot 2025.02 config needed a fix for.
+`meta-raspberrypi` installs the `bcm2712d0.dtbo` overlay, so D0-stepping boards boot fine. With the Buildroot 2025.02 config the same board hit a kernel panic until I enabled the overlays.
 
 Scarthgap ships wpa_supplicant 2.10. The "port authorized" timeout with `brcmfmac` started with 2.11, so the `feature_disable=0x82000` driver workaround from the Buildroot tree is not needed here.
 
